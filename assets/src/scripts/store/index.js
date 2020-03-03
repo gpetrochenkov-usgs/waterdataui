@@ -288,6 +288,7 @@ export const Actions = {
             if (!state.audiblePlayId) {
                 let play = function () {
                     let newOffset = getState().timeSeriesState.cursorOffset + 15 * 60 * 1000;
+                    console.log(newOffset);
                     if (newOffset > maxCursorOffset) {
                         dispatch(Actions.stopTimeSeriesPlay());
                     } else {

@@ -1,6 +1,7 @@
 import {scaleLinear, scaleSymlog} from 'd3-scale';
 import memoize from 'fast-memoize';
 import {createSelector} from 'reselect';
+import { DateTime } from 'luxon';
 
 import {getVariables, getCurrentParmCd, getRequestTimeRange, getTimeSeriesForTsKey} from '../../selectors/time-series-selector';
 import {convertCelsiusToFahrenheit, convertFahrenheitToCelsius} from '../../utils';
@@ -71,11 +72,26 @@ export const getXScale = memoize((kind, tsKey) => createSelector(
     getRequestTimeRange(tsKey),
         state => state.ui.hydrographXRange,
     (layout, requestTimeRange, hydrographXRange) => {
+        // console.log(tsKey);
+        // console.log(kind);
+        // console.log(requestTimeRange)
+        // console.log(hydrographXRange)
         let timeRange;
         if (kind === 'BRUSH') {
             timeRange = requestTimeRange;
         } else {
-            timeRange = hydrographXRange ? hydrographXRange : requestTimeRange;
+            if (hydrographXRange) {
+                if (tsKey === 'compare') {
+                    timeRange = {};
+                    timeRange['start'] = DateTime.fromMillis(hydrographXRange['start']).minus({'years': 1})['ts'];
+                    timeRange['end'] = DateTime.fromMillis(hydrographXRange['end']).minus({'years': 1})['ts'];
+                } else{
+                    timeRange = hydrographXRange;
+                }
+                // console.log(timeRange);
+            } else{
+                timeRange = requestTimeRange;
+            }
         }
         return createXScale(timeRange, layout.width - layout.margin.right);
     }
