@@ -72,10 +72,6 @@ export const getXScale = memoize((kind, tsKey) => createSelector(
     getRequestTimeRange(tsKey),
         state => state.ui.hydrographXRange,
     (layout, requestTimeRange, hydrographXRange) => {
-        // console.log(tsKey);
-        // console.log(kind);
-        // console.log(requestTimeRange)
-        // console.log(hydrographXRange)
         let timeRange;
         if (kind === 'BRUSH') {
             timeRange = requestTimeRange;
@@ -88,7 +84,6 @@ export const getXScale = memoize((kind, tsKey) => createSelector(
                 } else{
                     timeRange = hydrographXRange;
                 }
-                // console.log(timeRange);
             } else{
                 timeRange = requestTimeRange;
             }
